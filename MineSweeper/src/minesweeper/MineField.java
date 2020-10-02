@@ -38,8 +38,6 @@ public class MineField extends JPanel implements MouseListener{
         plantMines();
         this.setLayout(null);
         this.setSize(45*colunas, 35*linhas);
-        trace("all done");
-        trace (winCond);
     }
     /** Invocador da Classe principal com parametros
     * @param MineField Cria um campo minado
@@ -71,7 +69,6 @@ public class MineField extends JPanel implements MouseListener{
             int pmCol = (int)(Math.random()*colunas);
             if (!field[pmLin][pmCol].isMined()){
                 field[pmLin][pmCol].installMine();
-                trace("Mina plantada em: linha: "+pmLin+" coluna: "+pmCol);
             } else {
                 plantedMines--;
             }
@@ -115,13 +112,13 @@ public class MineField extends JPanel implements MouseListener{
         this.totalDeMinas = minas;
         winCond = (colunas*linhas)-totalDeMinas;
         winCount =0;
-        
-        trace("Criando novo campo com tamanho alterado...");
+        resetField();
+    }
+    public void resetField(){
         this.removeAll();
         this.setSize(45*colunas, 35*linhas);
         field = new Field[this.linhas][this.colunas];
         plantMines();
-        
     }
     
     /** Recria o campo minado com outro número de minas

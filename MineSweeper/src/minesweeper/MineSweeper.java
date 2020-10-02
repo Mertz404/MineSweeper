@@ -1,6 +1,9 @@
 package minesweeper;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 /**
@@ -22,9 +25,20 @@ public class MineSweeper extends JFrame {
         mField.setBackground(Color.red);
         mField.setLocation((this.getWidth()-mField.getWidth())/2, ((this.getHeight()-35)-mField.getHeight())/2);
         this.add(mField);
-        mField.setMineFieldSize(5, 5, 10);
-        mField.setLocation((this.getWidth()-mField.getWidth())/2, ((this.getHeight()-35)-mField.getHeight())/2);
+        
+        JButton btn = new JButton("Novo");
+        btn.setSize(btn.getPreferredSize());
+        btn.setLocation((this.getWidth()-btn.getWidth())/2, 5);
+        btn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    mField.resetField();   
+            }
 
+            
+        });
+        this.add(btn);
+        
     }
     public static void main(String[] args) {
         MineSweeper x = new MineSweeper();
