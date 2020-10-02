@@ -16,11 +16,12 @@ public class MineSweeper extends JFrame {
         this.setResizable(false);//tamanho da janela
         this.setLocationRelativeTo(null);// após referenciar o tamanho, centraliza a janela
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);// ao fechar a janela encerra o app
-        MineField field = new MineField();
+        MineField mField = new MineField();
         
-        field.setBackground(Color.red);
-        field.setLocation((this.getWidth()-field.getWidth())/2, ((this.getHeight()-35)-field.getHeight())/2);
-        this.add(field);
+        
+        mField.setBackground(Color.red);
+        mField.setLocation((this.getWidth()-mField.getWidth())/2, ((this.getHeight()-35)-mField.getHeight())/2);
+        this.add(mField);
 
     }
     public static void main(String[] args) {

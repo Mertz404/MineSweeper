@@ -51,17 +51,19 @@ public class MineField extends JPanel implements MouseListener{
         this.colunas = colunas;
         this.totalDeMinas = minas;
         field = new Field[this.linhas][this.colunas];
-        plantMines();
-        
+        plantMines();        
     }
     * */
     private void plantMines(){
-        
+        //creating and planting fields
         for (int lin = 0; lin < linhas; lin++){
             for (int col = 0; col < colunas; col++){
                 field[lin][col] = new Field();
+                field[lin][col].setLocation(lin*45, col*35);
+                this.add(field[lin][col]);
             }
         }
+        //planting mines on fields
         for (int plantedMines = 0; plantedMines < totalDeMinas; plantedMines++){
             int pmLin = (int)(Math.random()*linhas);
             int pmCol = (int)(Math.random()*colunas);
@@ -70,6 +72,28 @@ public class MineField extends JPanel implements MouseListener{
                 trace("Mina plantada em: linha: "+pmLin+" coluna: "+pmCol);
             } else {
                 plantedMines--;
+            }
+        }
+        //setting danger
+        for (int lin = 0; lin < linhas; lin++){
+            for (int col = 0; col < colunas; col++){
+                int perigo = 0;
+                try { if (field[lin-1][col-1].isMined()){ perigo++;} } catch (Exception ex){}
+                try { if (field[lin-1][col].isMined()){ perigo++;} } catch (Exception ex){}
+                try { if (field[lin-1][col+1].isMined()){ perigo++;} } catch (Exception ex){}
+                
+                try { if (field[lin][col-1].isMined()){ perigo++;} } catch (Exception ex){}
+                try { if (field[lin][col+1].isMined()){ perigo++;} } catch (Exception ex){}
+
+                try { if (field[lin+1][col-1].isMined()){ perigo++;} } catch (Exception ex){}
+                try { if (field[lin+1][col].isMined()){ perigo++;} } catch (Exception ex){}
+                try { if (field[lin+1][col+1].isMined()){ perigo++;} } catch (Exception ex){}
+
+                field[lin][col].setPerigo(perigo);
+                field[lin][col].setText(""+perigo);
+                if (field[lin][col].isMined()){ field[lin][col].setText(""+9);}
+                
+     
             }
         }
         
