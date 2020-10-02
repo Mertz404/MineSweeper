@@ -22,7 +22,7 @@ public class MineField extends JPanel implements MouseListener{
     //Define o total de minas
     private int totalDeMinas = 7;
     //Cria variáveis para o contador e condição de vitória
-    private int winCount, winCond;
+    private int winCount, winCond = (colunas*linhas)-totalDeMinas;
     //um painel (oculto) para mensagens 
     private JPanel glassPanel;
     //mensagem a ser exibida
@@ -39,6 +39,7 @@ public class MineField extends JPanel implements MouseListener{
         this.setLayout(null);
         this.setSize(45*colunas, 35*linhas);
         trace("all done");
+        trace (winCond);
     }
     /** Invocador da Classe principal com parametros
     * @param MineField Cria um campo minado
@@ -58,8 +59,9 @@ public class MineField extends JPanel implements MouseListener{
         //creating and planting fields
         for (int lin = 0; lin < linhas; lin++){
             for (int col = 0; col < colunas; col++){
-                field[lin][col] = new Field();
+                field[lin][col] = new Field(col, lin);
                 field[lin][col].setLocation(lin*45, col*35);
+                field[lin][col].addMouseListener(this);
                 this.add(field[lin][col]);
             }
         }
@@ -91,9 +93,10 @@ public class MineField extends JPanel implements MouseListener{
 
                 field[lin][col].setPerigo(perigo);
                 field[lin][col].setText(""+perigo);
-                if (field[lin][col].isMined()){ field[lin][col].setText(""+9);}
-                
-     
+                if (field[lin][col].isMined()){ 
+                    field[lin][col].setText(""+9);
+                    field[lin][col].setPerigo(9);
+                }
             }
         }
         
@@ -104,11 +107,18 @@ public class MineField extends JPanel implements MouseListener{
     /** Recria o campo minado com outras dimensões
     * @param linhas Número de linhas do campo
     * @param colunas Número de colunas do campo
+    * @param minas Número de minas no campo
     */
-    public void setMineFieldSize(int linhas, int colunas){
+    public void setMineFieldSize(int linhas, int colunas, int minas){
         this.linhas = linhas;
-        this.colunas = colunas;        
+        this.colunas = colunas;
+        this.totalDeMinas = minas;
+        winCond = (colunas*linhas)-totalDeMinas;
+        winCount =0;
+        
         trace("Criando novo campo com tamanho alterado...");
+        this.removeAll();
+        this.setSize(45*colunas, 35*linhas);
         field = new Field[this.linhas][this.colunas];
         plantMines();
         
@@ -126,6 +136,32 @@ public class MineField extends JPanel implements MouseListener{
     public int getAmountOfMines(){
         return totalDeMinas;
     }
+    private void expandSafeZone(int lin, int col){
+        if (field[lin][col].isEnabled()){
+            field[lin][col].setEnabled(false);
+            trackWinCond();
+            field[lin][col].setText(""+field[lin][col].getPerigo());
+            if (field[lin][col].getPerigo()==0){
+                try{ if(field[lin-1][col-1].getPerigo() < 9) {expandSafeZone(lin-1, col-1);}}catch (Exception e){}
+                try{ if(field[lin-1][col].getPerigo() < 9) {expandSafeZone(lin-1, col);}}catch (Exception e){}
+                try{ if(field[lin-1][col+1].getPerigo() < 9) {expandSafeZone(lin-1, col+1);}}catch (Exception e){}
+                try{ if(field[lin][col-1].getPerigo() < 9) {expandSafeZone(lin, col-1);}}catch (Exception e){}
+                try{ if(field[lin][col+1].getPerigo() < 9) {expandSafeZone(lin, col+1);}}catch (Exception e){}
+                try{ if(field[lin+1][col-1].getPerigo() < 9) {expandSafeZone(lin+1, col-1);}}catch (Exception e){}
+                try{ if(field[lin+1][col].getPerigo() < 9) {expandSafeZone(lin+1, col);}}catch (Exception e){}
+                try{ if(field[lin+1][col+1].getPerigo() < 9) {expandSafeZone(lin+1, col+1);}}catch (Exception e){}
+            }
+        }
+    }
+    private void trackWinCond (){
+        winCount++;
+        trace(winCount);
+        if (winCond==winCount){
+            trace("voce ganhou");
+        }
+
+    }
+    
     /** Apenas um atalho para imprimir no console dados durante execução do app
      * Syntaxe inspirada no AS3
      * @param obj Objeto que será inspecionado e exibido no console
@@ -136,11 +172,18 @@ public class MineField extends JPanel implements MouseListener{
     @Override
     public void mousePressed(MouseEvent e) {
         Field min = (Field)e.getComponent();
+        trace("posição lin:"+min.lin+" col:"+min.col);
         if (min.getPerigo()==9){
+            trace("game over");
             //game over
         }else if (min.getPerigo()==0){
+            trace("looking for more safezone");
+            expandSafeZone(min.col, min.lin);
             //look for more clear fields
         } else {
+            min.setEnabled(false);
+            trackWinCond ();
+            trace("Danger spread nearby");
             //just clear this one field
         }     
 

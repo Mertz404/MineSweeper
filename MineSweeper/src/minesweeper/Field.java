@@ -23,8 +23,10 @@ public class Field extends JButton {
     */
 
 
-    public Field (){
+    public Field (int lin, int col){
         this.setSize(lar, alt);
+        this.lin = lin;
+        this.col = col;
         this.setText("");
     }
 

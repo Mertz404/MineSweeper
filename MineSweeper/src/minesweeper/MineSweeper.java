@@ -22,6 +22,8 @@ public class MineSweeper extends JFrame {
         mField.setBackground(Color.red);
         mField.setLocation((this.getWidth()-mField.getWidth())/2, ((this.getHeight()-35)-mField.getHeight())/2);
         this.add(mField);
+        mField.setMineFieldSize(5, 5, 10);
+        mField.setLocation((this.getWidth()-mField.getWidth())/2, ((this.getHeight()-35)-mField.getHeight())/2);
 
     }
     public static void main(String[] args) {
