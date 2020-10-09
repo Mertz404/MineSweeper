@@ -35,10 +35,8 @@ public class MineSweeper extends JFrame {
             public void actionPerformed(ActionEvent e) {
                     mField.resetField();   
             }
-
-            
         });
-        this.add(btn);
+        this.add(btn);        
         
     }
     public static void main(String[] args) {

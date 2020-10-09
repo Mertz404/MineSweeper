@@ -54,6 +54,8 @@ public class MineField extends JPanel implements MouseListener{
     }
     * */
     private void plantMines(){
+        winCount = 0;
+        winCond = (colunas*linhas)-totalDeMinas;
         //creating and planting fields
         for (int lin = 0; lin < linhas; lin++){
             for (int col = 0; col < colunas; col++){
@@ -152,7 +154,7 @@ public class MineField extends JPanel implements MouseListener{
     }
     private void trackWinCond (){
         winCount++;
-        trace(winCount);
+        trace(winCount+" of " + winCond + " cleared");
         if (winCond==winCount){
             trace("voce ganhou");
         }
@@ -168,10 +170,15 @@ public class MineField extends JPanel implements MouseListener{
     }
     @Override
     public void mousePressed(MouseEvent e) {
-        Field min = (Field)e.getComponent();
-        trace("posição lin:"+min.lin+" col:"+min.col);
-        if (min.getPerigo()==9){
+        Field min = (Field) e.getComponent();
+        trace("posição lin:" + min.lin + " col:" + min.col);
+        if (min.getPerigo() == 9) {
             trace("game over");
+            for (int lin = 0; lin < linhas; lin++) {
+                for (int col = 0; col < colunas; col++) {
+                    field[lin][col].setEnabled(false);
+                }
+            }
             //game over
         }else if (min.getPerigo()==0){
             trace("looking for more safezone");
