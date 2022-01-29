@@ -156,7 +156,7 @@ public class MineField extends JPanel implements MouseListener{
         winCount++;
         trace(winCount+" of " + winCond + " cleared");
         if (winCond==winCount){
-            trace("voce ganhou");
+            trace("Você ganhou!");
         }
 
     }
